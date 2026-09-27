@@ -8,7 +8,9 @@ export type UiComponent =
     | "sleep"
     | "time"
     | "speedLimit"
-    | "topBar";
+    | "topBar"
+    | "dashLights"
+    | "dashDamage";
 export type ActiveComponents = UiComponent[];
 export type LocaleCode = "en" | "de" | "nl" | "cs" | "sk" | "ko" | "ro";
 
@@ -81,6 +83,8 @@ const DEFAULT_SETTINGS: AppSettingsState = {
         "time",
         "sleep",
         "topBar",
+        "dashLights",
+        "dashDamage",
     ],
     locale: "en",
 };
@@ -162,6 +166,13 @@ export const useSettings = () => {
             try {
                 const parsed = JSON.parse(savedString);
                 settings.value = { ...DEFAULT_SETTINGS, ...parsed };
+
+                // Migrate old saves: enable newly added components.
+                for (const id of ["dashLights", "dashDamage"] as const) {
+                    if (!settings.value.activeUiComponents.includes(id)) {
+                        settings.value.activeUiComponents.push(id);
+                    }
+                }
 
                 settings.value.profiles = {
                     ets2: {

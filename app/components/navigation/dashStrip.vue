@@ -13,6 +13,14 @@ defineProps<{
 }>();
 
 const { t } = useTranslations();
+const { settings } = useSettings();
+
+const showDamage = computed(() =>
+    settings.value.activeUiComponents.includes("dashDamage"),
+);
+const showLights = computed(() =>
+    settings.value.activeUiComponents.includes("dashLights"),
+);
 
 function damageClass(pct: number) {
     if (pct >= 25) return "dmg-red";
@@ -22,8 +30,8 @@ function damageClass(pct: number) {
 </script>
 
 <template>
-    <div class="dash-strip">
-        <div class="strip-group">
+    <div v-show="showDamage || showLights" class="dash-strip">
+        <div v-show="showDamage" class="strip-group">
             <div
                 class="dmg-item"
                 :title="`${t('dash.truck')}: eng/trans/cab/chas/wheel ${(truckParts ?? []).join('/')}`"
@@ -43,8 +51,8 @@ function damageClass(pct: number) {
                 <span class="dmg-text" :class="damageClass(cargoDamage)">{{ cargoDamage }}%</span>
             </div>
         </div>
-        <div class="strip-divider"></div>
-        <div class="strip-group lights">
+        <div v-show="showDamage && showLights" class="strip-divider"></div>
+        <div v-show="showLights" class="strip-group lights">
             <Icon
                 name="mdi:car-parking-lights"
                 size="20"

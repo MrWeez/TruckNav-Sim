@@ -134,6 +134,10 @@
         "speedLimitTitle": "Speed Sign",
         "speedTitle": "Speed",
         "topBarDescription": "Hides the whole top bar with drive info.",
-        "topBarTitle": "Top Bar"
+        "topBarTitle": "Top Bar",
+        "dashLightsTitle": "Dash Lights",
+        "dashLightsDescription": "Shows parking, low/high beam, beacon and parking brake status icons.",
+        "dashDamageTitle": "Damage",
+        "dashDamageDescription": "Shows truck, trailer and cargo damage percentages."
     }
 }
