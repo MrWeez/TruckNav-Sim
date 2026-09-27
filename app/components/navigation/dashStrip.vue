@@ -26,55 +26,55 @@ function damageClass(pct: number) {
         <div class="strip-group">
             <div
                 class="dmg-item"
-                :title="`eng/trans/cab/chas/wheel: ${(truckParts ?? []).join('/')}`"
+                :title="`${t('dash.truck')}: eng/trans/cab/chas/wheel ${(truckParts ?? []).join('/')}`"
             >
                 <Icon name="lucide:truck" size="20" :class="damageClass(truckDamage)" />
-                <span class="dmg-text" :class="damageClass(truckDamage)">{{ t("dash.truck") }} {{ truckDamage }}%</span>
+                <span class="dmg-text" :class="damageClass(truckDamage)">{{ truckDamage }}%</span>
             </div>
             <div
                 class="dmg-item"
-                :title="`body/chas/wheel: ${(trailerParts ?? []).join('/')}`"
+                :title="`${t('dash.trailer')}: body/chas/wheel ${(trailerParts ?? []).join('/')}`"
             >
                 <Icon name="lucide:container" size="20" :class="damageClass(trailerDamage)" />
-                <span class="dmg-text" :class="damageClass(trailerDamage)">{{ t("dash.trailer") }} {{ trailerDamage }}%</span>
+                <span class="dmg-text" :class="damageClass(trailerDamage)">{{ trailerDamage }}%</span>
             </div>
-            <div class="dmg-item">
+            <div class="dmg-item" :title="t('dash.cargo')">
                 <Icon name="lucide:package" size="20" :class="damageClass(cargoDamage)" />
-                <span class="dmg-text" :class="damageClass(cargoDamage)">{{ t("dash.cargo") }} {{ cargoDamage }}%</span>
+                <span class="dmg-text" :class="damageClass(cargoDamage)">{{ cargoDamage }}%</span>
             </div>
         </div>
         <div class="strip-divider"></div>
         <div class="strip-group lights">
             <Icon
-                name="lucide:lamp"
+                name="mdi:car-parking-lights"
                 size="20"
                 class="lamp"
                 :class="{ on: lightParking }"
                 :title="t('dash.parkingLights')"
             />
             <Icon
-                name="lucide:lightbulb"
+                name="mdi:car-light-dimmed"
                 size="20"
                 class="lamp"
                 :class="{ on: lightLow }"
                 :title="t('dash.lowBeam')"
             />
             <Icon
-                name="lucide:zap"
+                name="mdi:car-light-high"
                 size="20"
                 class="lamp"
                 :class="{ on: lightHigh }"
                 :title="t('dash.highBeam')"
             />
             <Icon
-                name="lucide:siren"
+                name="mdi:alarm-light-outline"
                 size="20"
                 class="lamp"
                 :class="{ on: lightBeacon }"
                 :title="t('dash.beacon')"
             />
             <Icon
-                name="lucide:circle-parking"
+                name="mdi:car-brake-parking"
                 size="20"
                 class="lamp park"
                 :class="{ on: brakeParking }"
