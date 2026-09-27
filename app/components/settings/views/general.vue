@@ -2,7 +2,7 @@
 import { ets2Expansions } from "~/data/ets2/ets2Expansions";
 import { atsExpansions } from "~/data/ats/atsExpansions";
 
-const { settings, activeSettings, updateProfile, resetSettings } =
+const { settings, activeSettings, updateGlobal, updateProfile, resetSettings } =
     useSettings();
 const { locale, setLocale, t } = useTranslations();
 const {
@@ -14,6 +14,7 @@ const {
 const isDlcPanelOpened = ref(false);
 
 const isMetric = computed(() => activeSettings.value.units === "metric");
+const keepAwake = computed(() => settings.value.keepAwake);
 const rpcEnabled = computed(() => desktopSettings.value.rpcEnabled);
 const selectedExpansion = computed(() => {
     return settings.value.selectedGame === "ets2"
@@ -41,6 +42,10 @@ const currentLanguageLabel = computed(() => {
 
 function toggleUnits() {
     updateProfile("units", isMetric.value ? "imperial" : "metric");
+}
+
+function toggleKeepAwake() {
+    updateGlobal("keepAwake", !settings.value.keepAwake);
 }
 
 function toggleDlcPanel() {
@@ -85,6 +90,21 @@ onMounted(async () => {
                 @connect="toggleUnits"
                 size="normal"
                 :active="isMetric"
+            />
+        </div>
+
+        <div class="option setting">
+            <div class="option-title">
+                <Icon name="lucide:zap" size="24" />
+                <p>{{ t("settings.keepScreenOn") }}</p>
+            </div>
+
+            <SegmentedControl
+                :left-option="t('settings.on')"
+                :right-option="t('settings.off')"
+                @connect="toggleKeepAwake"
+                size="normal"
+                :active="keepAwake"
             />
         </div>
 

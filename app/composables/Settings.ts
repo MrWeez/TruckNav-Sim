@@ -39,6 +39,7 @@ export interface AppSettingsState {
     truckMarkerSize: number;
     compactTripFontSize: number;
     activeUiComponents: ActiveComponents;
+    keepAwake: boolean;
     locale: LocaleCode;
 }
 
@@ -76,6 +77,7 @@ const DEFAULT_SETTINGS: AppSettingsState = {
     hudBtnSize: 30,
     truckMarkerSize: 40,
     compactTripFontSize: 1.8,
+    keepAwake: true,
     activeUiComponents: [
         "speed",
         "speedLimit",
@@ -232,6 +234,7 @@ export const useSettings = () => {
         settings.value.truckMarkerSize = DEFAULT_SETTINGS.truckMarkerSize;
         settings.value.compactTripFontSize =
             DEFAULT_SETTINGS.compactTripFontSize;
+        settings.value.keepAwake = DEFAULT_SETTINGS.keepAwake;
 
         settings.value.activeUiComponents = [
             ...DEFAULT_SETTINGS.activeUiComponents,

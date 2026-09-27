@@ -367,6 +367,12 @@ watch(gameConnected, (isConnected) => {
 
 onMounted(async () => {
     // eruda.init(); // KEEP FOR DEBUGGING MOBILE
+    const { applySetting } = useKeepAwake();
+    await applySetting(settings.value.keepAwake);
+    watch(
+        () => settings.value.keepAwake,
+        (enabled) => applySetting(enabled),
+    );
     await loadLocationData();
     if (!mapEl.value) return;
     if (isElectron.value) {
@@ -437,6 +443,9 @@ onMounted(async () => {
 onUnmounted(() => {
     stopTelemetry();
     destroyWorker();
+
+    const { release } = useKeepAwake();
+    void release();
 
     if (routeTimer) clearTimeout(routeTimer);
     if (uiTimer) clearTimeout(uiTimer);
