@@ -4,31 +4,28 @@ const props = defineProps<{
     speedLimit: number;
 }>();
 
-const { kmToUserUnits } = useUnitConversion();
+const { kmToUserUnits, speedUnit } = useUnitConversion();
 const { settings } = useSettings();
 
 const truckSpeedConverted = computed(() => kmToUserUnits(props.truckSpeed));
 const speedLimitConverted = computed(() => kmToUserUnits(props.speedLimit));
+const hasLimit = computed(() => props.speedLimit > 0);
+const isOver = computed(
+    () => hasLimit.value && props.truckSpeed > props.speedLimit + 5,
+);
+const badgeShape = computed(() =>
+    settings.value.selectedGame === "ats" ? "square" : "circle",
+);
 </script>
 
 <template>
-    <div
-        v-if="speedLimit !== 0"
-        class="speed-limit-sign"
-        :class="settings.selectedGame === 'ets2' ? 'circle' : 'square'"
-    >
-        <Transition name="over-limit">
-            <div
-                v-if="truckSpeed > speedLimit + 5"
-                class="speed-limit-over-limit"
-                :class="settings.selectedGame === 'ets2' ? 'circle' : 'square'"
-            >
-                <div class="over-limit">{{ truckSpeedConverted }}</div>
-            </div>
-        </Transition>
-
-        <div class="speed-limit">
-            {{ speedLimitConverted }}
+    <div class="speed-widget" :class="{ over: isOver }">
+        <div class="speed-circle">
+            <span class="speed-value">{{ truckSpeedConverted }}</span>
+            <span class="speed-unit">{{ speedUnit }}</span>
+        </div>
+        <div class="limit-badge" :class="[badgeShape, { 'no-limit': !hasLimit }]">
+            <span v-if="hasLimit">{{ speedLimitConverted }}</span>
         </div>
     </div>
 </template>

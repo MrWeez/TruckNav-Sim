@@ -65,6 +65,12 @@
         font-size: 1.5rem;
     }
 
+    .fuel-sub {
+        opacity: 0.7;
+        font-size: 1.2rem;
+        white-space: nowrap;
+    }
+
     .pulse-red {
         animation: pulseRed 2.5s infinite ease-in-out;
     }

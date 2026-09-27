@@ -54,7 +54,7 @@
         "typescript": "^5.9.3"
     },
     "resolutions": {
-        "glob": "11.0.5",
+        "glob": "11.1.0",
         "tar": "7.5.8",
         "pmtiles": "4.3.0"
     }

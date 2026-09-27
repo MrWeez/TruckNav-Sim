@@ -62,6 +62,24 @@ export function getNavigationState(data: CommonTelemetryData) {
     return { fuel, speedLimit, restStoptime, restStopMinutes: totalMinutes };
 }
 
+export function getDashState(data: CommonTelemetryData) {
+    return {
+        lightParking: data.lights.parking,
+        lightLow: data.lights.lowBeam,
+        lightHigh: data.lights.highBeam,
+        lightBeacon: data.lights.beacon,
+        brakeParking: data.lights.brakeParking,
+        fuelWarning: data.lights.fuelWarning,
+        fuelRange: Math.max(0, Math.round(data.fuelDetail.rangeKm)),
+        fuelAvg: Math.max(0, data.fuelDetail.avgLper100km),
+        truckDamage: data.damage.truckPct,
+        trailerDamage: data.damage.trailerPct,
+        cargoDamage: data.damage.cargoPct,
+        truckParts: data.damage.truckParts,
+        trailerParts: data.damage.trailerParts,
+    };
+}
+
 export function getJobState(data: CommonTelemetryData, selectedGame: GameType) {
     let companyTarget = "";
     let cityTarget = "";

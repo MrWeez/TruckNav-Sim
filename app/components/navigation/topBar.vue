@@ -4,6 +4,8 @@ const props = defineProps<{
     gameConnected: boolean;
     simDataValid: boolean;
     fuel: number;
+    fuelRange: number;
+    fuelAvg: number;
     restStopMinutes: number;
     restStopTime: string;
     gameTime: string;
@@ -48,6 +50,8 @@ const fuelConverted = computed(() => literToUserUnits(props.fuel));
                         {{ fuelConverted
                         }}<span class="liters">{{ fuelUnit }}</span>
                     </p>
+                    <p class="fuel-sub">{{ fuelRange }} km</p>
+                    <p class="fuel-sub">{{ fuelAvg.toFixed(1) }} L/100km</p>
                 </div>
 
                 <div

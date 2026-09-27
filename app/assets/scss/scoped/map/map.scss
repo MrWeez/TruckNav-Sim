@@ -81,6 +81,17 @@
     gap: 0.8rem;
 }
 
+.bottom-right-stack {
+    position: absolute;
+    right: 10px;
+    bottom: 25px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
 .icon {
     width: var(--hud-btn-size);
     height: var(--hud-btn-size);

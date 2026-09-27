@@ -224,6 +224,23 @@ export interface TruckTelPacket {
     income?: number | null;
     restRemain?: number | null;
     timestamp?: number | null;
+    lightParking?: boolean | null;
+    lightLow?: boolean | null;
+    lightHigh?: boolean | null;
+    lightBeacon?: boolean | null;
+    brakeParking?: boolean | null;
+    fuelWarn?: boolean | null;
+    fuelRange?: number | null;
+    fuelAvg?: number | null;
+    wearEngine?: number | null;
+    wearTrans?: number | null;
+    wearCabin?: number | null;
+    wearChassis?: number | null;
+    wearWheels?: number | null;
+    trailerBody?: number | null;
+    trailerChassis?: number | null;
+    trailerWheels?: number | null;
+    cargoDamage?: number | null;
 }
 
 //-----------------------------------------------------------------------------
@@ -253,6 +270,28 @@ export interface CommonTruckInfo {
     fuel: number,
 }
 
+export interface CommonLightsInfo {
+    parking: boolean,
+    lowBeam: boolean,
+    highBeam: boolean,
+    beacon: boolean,
+    brakeParking: boolean,
+    fuelWarning: boolean,
+}
+
+export interface CommonFuelDetail {
+    rangeKm: number,
+    avgLper100km: number,
+}
+
+export interface CommonDamageInfo {
+    truckPct: number,
+    trailerPct: number,
+    cargoPct: number,
+    truckParts: number[],
+    trailerParts: number[],
+}
+
 export interface CommonCompany {
     companyName: string;
     companyId: string;
@@ -274,6 +313,9 @@ export interface CommonTelemetryData {
     nav: CommonNavInfo,
     job: CommonJobInfo,
     truck: CommonTruckInfo,
+    lights: CommonLightsInfo,
+    fuelDetail: CommonFuelDetail,
+    damage: CommonDamageInfo,
     gameTimeFormatted: string,
     nextRestStopMinutes: number,
 }

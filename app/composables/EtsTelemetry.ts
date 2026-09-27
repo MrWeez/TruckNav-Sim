@@ -1,5 +1,6 @@
 import { Capacitor } from "@capacitor/core";
 import {
+    getDashState,
     getJobState,
     getNavigationState,
     getTruckState,
@@ -9,6 +10,7 @@ import type {
     GameState,
     NavigationState,
     JobState,
+    DashState,
     TelemetryUpdate,
     TelemetryPacket,
     TruckTelPacket,
@@ -46,6 +48,22 @@ const jobState = reactive<JobState>({
     sourceCompany: "0",
     destinationCity: "0",
     destinationCompany: "0",
+});
+
+const dashState = reactive<DashState>({
+    lightParking: false,
+    lightLow: false,
+    lightHigh: false,
+    lightBeacon: false,
+    brakeParking: false,
+    fuelWarning: false,
+    fuelRange: 0,
+    fuelAvg: 0,
+    truckDamage: 0,
+    trailerDamage: 0,
+    cargoDamage: 0,
+    truckParts: [],
+    trailerParts: [],
 });
 
 let lastPosition: [number, number] | null = null;
@@ -223,6 +241,45 @@ export function useEtsTelemetry() {
             },
             nextRestStopMinutes: data.common.nextRestStopMinutes,
             gameTimeFormatted: gameTimeFormatted,
+            lights: {
+                parking: data.truck.current.lights.parking,
+                lowBeam: data.truck.current.lights.beamLow,
+                highBeam: data.truck.current.lights.beamHigh,
+                beacon: false,
+                brakeParking: data.truck.current.parkingBrake,
+                fuelWarning: data.truck.current.dashboard.fuelWarning,
+            },
+            fuelDetail: {
+                rangeKm: data.truck.current.dashboard.fuelRange,
+                avgLper100km: data.truck.current.dashboard.averageConsumption,
+            },
+            damage: {
+                truckPct: Math.round(data.truck.current.damage.cabin * 100),
+                trailerPct: data.trailers[0]
+                    ? Math.round(
+                          Math.max(
+                              data.trailers[0].damage.chassis,
+                              data.trailers[0].damage.wheels,
+                          ) * 100,
+                      )
+                    : 0,
+                cargoPct: Math.round(
+                    (data.trailers[0]?.damage.cargo ?? data.job.cargo?.cargoDamage ?? 0) * 100,
+                ),
+                truckParts: [
+                    data.truck.current.damage.engine,
+                    data.truck.current.damage.transmission,
+                    data.truck.current.damage.cabin,
+                    data.truck.current.damage.chassis,
+                    data.truck.current.damage.wheels,
+                ].map((v) => Math.round(v * 100)),
+                trailerParts: data.trailers[0]
+                    ? [
+                          data.trailers[0].damage.chassis,
+                          data.trailers[0].damage.wheels,
+                      ].map((v) => Math.round(v * 100))
+                    : [],
+            },
         };
     }
 
@@ -317,6 +374,56 @@ export function useEtsTelemetry() {
             },
             nextRestStopMinutes: data.restRemain ?? 0,
             gameTimeFormatted,
+            lights: {
+                parking: data.lightParking ?? false,
+                lowBeam: data.lightLow ?? false,
+                highBeam: data.lightHigh ?? false,
+                beacon: data.lightBeacon ?? false,
+                brakeParking: data.brakeParking ?? false,
+                fuelWarning: data.fuelWarn ?? false,
+            },
+            fuelDetail: {
+                rangeKm: data.fuelRange ?? 0,
+                // TruckTel reports liters/km, dash shows L/100km.
+                avgLper100km: (data.fuelAvg ?? 0) * 100,
+            },
+            damage: {
+                // Single truck/trailer numbers follow the game's cab/body
+                // lines (max() overstates vs game, e.g. 16% vs 9%).
+                truckPct:
+                    data.wearCabin != null
+                        ? Math.round(data.wearCabin * 100)
+                        : Math.round(
+                              Math.max(
+                                  data.wearEngine ?? 0,
+                                  data.wearTrans ?? 0,
+                                  data.wearChassis ?? 0,
+                                  data.wearWheels ?? 0,
+                              ) * 100,
+                          ),
+                trailerPct:
+                    data.trailerBody != null
+                        ? Math.round(data.trailerBody * 100)
+                        : Math.round(
+                              Math.max(
+                                  data.trailerChassis ?? 0,
+                                  data.trailerWheels ?? 0,
+                              ) * 100,
+                          ),
+                cargoPct: Math.round((data.cargoDamage ?? 0) * 100),
+                truckParts: [
+                    data.wearEngine ?? 0,
+                    data.wearTrans ?? 0,
+                    data.wearCabin ?? 0,
+                    data.wearChassis ?? 0,
+                    data.wearWheels ?? 0,
+                ].map((v) => Math.round(v * 100)),
+                trailerParts: [
+                    data.trailerBody ?? 0,
+                    data.trailerChassis ?? 0,
+                    data.trailerWheels ?? 0,
+                ].map((v) => Math.round(v * 100)),
+            },
         };
     }
 
@@ -375,12 +482,13 @@ export function useEtsTelemetry() {
             cityTarget: destinationCity,
             companyTarget: destinationCompany,
         } = getJobState(data, settings.value.selectedGame);
-
         Object.assign(jobState, {
             hasActiveJob: hasActiveJob,
             destinationCity: destinationCity,
             destinationCompany: destinationCompany,
         });
+
+        Object.assign(dashState, getDashState(data));
 
         sendDiscordRpcState({
             game: data.connection.game,
@@ -399,6 +507,7 @@ export function useEtsTelemetry() {
                 game: { ...gameState },
                 general: { ...navigationState },
                 job: { ...jobState },
+                dash: { ...dashState },
             });
         }
     }
@@ -436,6 +545,22 @@ export function useEtsTelemetry() {
             hasActiveJob: false,
         });
 
+        Object.assign(dashState, {
+            lightParking: false,
+            lightLow: false,
+            lightHigh: false,
+            lightBeacon: false,
+            brakeParking: false,
+            fuelWarning: false,
+            fuelRange: 0,
+            fuelAvg: 0,
+            truckDamage: 0,
+            trailerDamage: 0,
+            cargoDamage: 0,
+            truckParts: [],
+            trailerParts: [],
+        });
+
         clearDiscordRpcState();
 
         if (onUpdate && wasConnected) {
@@ -444,6 +569,7 @@ export function useEtsTelemetry() {
                 game: { ...gameState },
                 general: { ...navigationState },
                 job: { ...jobState },
+                dash: { ...dashState },
             });
         }
     }
@@ -453,6 +579,7 @@ export function useEtsTelemetry() {
         ...toRefs(truckState),
         ...toRefs(gameState),
         ...toRefs(jobState),
+        ...toRefs(dashState),
         startTelemetry,
         stopTelemetry,
     };

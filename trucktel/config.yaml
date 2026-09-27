@@ -92,3 +92,38 @@ custom-structures:
       key: rest.stop
     timestamp:
       key: game.time
+    lightParking:
+      key: truck.light.parking
+    lightLow:
+      key: truck.light.beam.low
+    lightHigh:
+      key: truck.light.beam.high
+    lightBeacon:
+      key: truck.light.beacon
+    brakeParking:
+      key: truck.brake.parking
+    fuelWarn:
+      key: truck.fuel.warning
+    fuelRange:
+      key: truck.fuel.range
+      operator: round
+    fuelAvg:
+      key: truck.fuel.consumption.average
+    wearEngine:
+      key: truck.wear.engine
+    wearTrans:
+      key: truck.wear.transmission
+    wearCabin:
+      key: truck.wear.cabin
+    wearChassis:
+      key: truck.wear.chassis
+    wearWheels:
+      key: truck.wear.wheels
+    trailerBody:
+      key: trailer.0.wear.body
+    trailerChassis:
+      key: trailer.0.wear.chassis
+    trailerWheels:
+      key: trailer.0.wear.wheels
+    cargoDamage:
+      key: job.cargo.damage

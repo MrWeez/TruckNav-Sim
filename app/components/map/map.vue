@@ -54,6 +54,19 @@ const {
     scale,
     averageSpeed,
     destinationCompany,
+    lightParking,
+    lightLow,
+    lightHigh,
+    lightBeacon,
+    brakeParking,
+    fuelWarning,
+    fuelRange,
+    fuelAvg,
+    truckDamage,
+    trailerDamage,
+    cargoDamage,
+    truckParts,
+    trailerParts,
 } = useEtsTelemetry();
 
 //
@@ -523,6 +536,8 @@ const onCancelRoute = () => {
                     <TopBar
                         v-show="settings.activeUiComponents.includes('topBar')"
                         :fuel="fuel"
+                        :fuel-range="fuelRange"
+                        :fuel-avg="fuelAvg"
                         :game-connected="gameConnected"
                         :sim-data-valid="simDataValid"
                         :game-time="gameTime"
@@ -629,12 +644,27 @@ const onCancelRoute = () => {
 
                     <SpeedLimit
                         v-show="
-                            speedLimit > 0 &&
                             settings.activeUiComponents.includes('speedLimit')
                         "
                         :truck-speed="truckSpeed"
                         :speed-limit="speedLimit"
                     />
+
+                    <div class="bottom-right-stack">
+                        <DashStrip
+                            v-show="simDataValid"
+                            :light-parking="lightParking"
+                            :light-low="lightLow"
+                            :light-high="lightHigh"
+                            :light-beacon="lightBeacon"
+                            :brake-parking="brakeParking"
+                            :truck-damage="truckDamage"
+                            :trailer-damage="trailerDamage"
+                            :cargo-damage="cargoDamage"
+                            :truck-parts="truckParts"
+                            :trailer-parts="trailerParts"
+                        />
+                    </div>
 
                     <div class="warnings">
                         <WarningSlide

@@ -59,6 +59,20 @@
         "tappingDisabled": "Tapping Disabled",
         "tappingEnabled": "Tapping Enabled"
     },
+    "dash": {
+        "title": "Dashboard",
+        "damage": "Damage",
+        "truck": "Truck",
+        "trailer": "Trailer",
+        "cargo": "Cargo",
+        "lights": "Lights",
+        "parkingLights": "Parking",
+        "lowBeam": "Low beam",
+        "highBeam": "High beam",
+        "beacon": "Beacon",
+        "status": "Status",
+        "parkingBrake": "Park brake"
+    },
     "mobile": {
         "pairWithComputer": "Pair with Computer"
     },
