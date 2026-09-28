@@ -117,7 +117,16 @@ export function useEtsTelemetry() {
             ? settings.value.savedIP
             : window.location.hostname;
         const path = isTruckTel ? "/api/ws/delta/nav?throttle=100" : "";
-        const url = `ws://${ip}:30001${path}`;
+        // https proxy in front of TruckTel (self-signed TLS for WakeLock):
+        // speak wss and follow the page port, except nuxt dev ports.
+        const proto = window.location.protocol === "https:" ? "wss" : "ws";
+        let port = window.location.port;
+        if (!port) {
+            port = proto === "wss" ? "443" : "30001";
+        } else if (port === "3000" || port === "3001" || port === "3002") {
+            port = "30001";
+        }
+        const url = `${proto}://${ip}:${port}${path}`;
 
         socket = new WebSocket(url);
 
